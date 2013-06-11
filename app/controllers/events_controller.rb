@@ -2,7 +2,9 @@ class EventsController < ApplicationController
   # GET /events
   # GET /events.json
   def index
-    @events = Event.where("date >= ?", ::DateTime.current).order("date")
+    filter = params[:filter] || "future"
+    filter.match(/(past|future)/).to_s
+    @events = Event.send(filter)
 
     respond_to do |format|
       format.html # index.html.erb
